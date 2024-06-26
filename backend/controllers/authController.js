@@ -1,8 +1,13 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { Sequelize, Op } = require('sequelize');
 const User = require('../models/user');
 
-const JWT_SECRET = process.env.JWT_SECRET
+require('dotenv').config(); // Load environment variables
+
+const JWT_SECRET = process.env.JWT_SECRET;
+
+console.log("this token " ,JWT_SECRET)
 
 exports.signUp = async (req, res) => {
     try {
@@ -20,7 +25,7 @@ exports.signIn = async (req, res) => {
         const { usernameOrEmail, password } = req.body;
         const user = await User.findOne({
             where: {
-                [Sequelize.Op.or]: [{ username: usernameOrEmail }, { email: usernameOrEmail }]
+                [Op.or]: [{ username: usernameOrEmail }, { email: usernameOrEmail }]
             }
         });
         if (user && (await bcrypt.compare(password, user.password))) {
