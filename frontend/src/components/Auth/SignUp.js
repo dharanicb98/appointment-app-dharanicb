@@ -17,7 +17,10 @@ const SignUp = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await api.post('/signup', formData);
+            const response = await api.post('/signup', formData);
+            const { token, user } = response.data;
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(user));
             setMessage('User created successfully. Redirecting to sign in...');
             setTimeout(() => {
                 setFormData(initialFormData); // Reset form fields

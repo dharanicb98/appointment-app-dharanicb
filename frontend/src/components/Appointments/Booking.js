@@ -1,13 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import api from '../../api';
-
 
 Modal.setAppElement('#root');
 
 const Booking = () => {
     const [formData, setFormData] = useState({ date: '', time: '' });
     const [isOpen, setIsOpen] = useState(true);
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        }
+    }, []);
+
+    console.log(user, "userDetails");
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -39,8 +48,17 @@ const Booking = () => {
                 &times;
             </button>
             <div className="text-center">
-                <h1 className="text-2xl mb-2">Hi, I am Gabbug!</h1>
-                <p className="mb-4">Ready for a Quality Software? Let's Dig Deep Into Your Thought!</p>
+                {user ? (
+                    <>
+                        <h1 className="text-2xl mb-2">Hi, {user.fullName}!</h1>
+                        <p className="mb-4">Ready for a Quality Software? Let's Dig Deep Into Your Thought!</p>
+                    </>
+                ) : (
+                    <>
+                        <h1 className="text-2xl mb-2">Hi, Guest!</h1>
+                        <p className="mb-4">Ready for a Quality Software? Let's Dig Deep Into Your Thought!</p>
+                    </>
+                )}
             </div>
             <form onSubmit={handleSubmit}>
                 <div className="mb-4">

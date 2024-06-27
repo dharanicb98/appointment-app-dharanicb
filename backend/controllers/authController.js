@@ -14,11 +14,13 @@ exports.signUp = async (req, res) => {
         const { username, email, phoneNo, fullName, password } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = await User.create({ username, email, phoneNo, fullName, password: hashedPassword });
-        res.status(201).json({ message: 'User created successfully' });
+        const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
+        res.status(201).json({ token, user: { id: user.id, username: user.username, email: user.email, phoneNo: user.phoneNo, fullName: user.fullName } });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 };
+
 
 exports.signIn = async (req, res) => {
     try {
@@ -30,7 +32,7 @@ exports.signIn = async (req, res) => {
         });
         if (user && (await bcrypt.compare(password, user.password))) {
             const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
-            res.json({ token });
+            res.json({ token, user: { id: user.id, username: user.username, email: user.email, phoneNo: user.phoneNo, fullName: user.fullName } });
         } else {
             res.status(401).json({ message: 'Invalid credentials' });
         }
@@ -38,3 +40,4 @@ exports.signIn = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
+

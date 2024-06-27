@@ -18,7 +18,9 @@ const SignIn = () => {
         e.preventDefault();
         try {
             const response = await api.post('/signin', formData);
-            localStorage.setItem('token', response.data.token);
+            const { token, user } = response.data;
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(user));
             setMessage('Login successful. Redirecting to booking page...');
             setTimeout(() => {
                 setFormData(initialFormData); // Reset form fields
