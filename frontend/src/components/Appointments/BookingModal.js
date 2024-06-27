@@ -2,12 +2,24 @@ import React, { useState } from 'react';
 import Modal from 'react-modal';
 import api from '../../api';
 
+const customStyles = {
+    content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+        backgroundColor: '#1A202C',
+        color: '#F7FAFC',
+        borderRadius: '10px',
+        padding: '20px',
+        width: '400px',
+    },
+};
 
-Modal.setAppElement('#root');
-
-const Booking = () => {
+const BookingModal = ({ isOpen, onRequestClose, user }) => {
     const [formData, setFormData] = useState({ date: '', time: '' });
-    const [isOpen, setIsOpen] = useState(true);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -18,30 +30,24 @@ const Booking = () => {
         try {
             await api.post('/appointments', formData);
             alert('Appointment booked successfully');
-            setIsOpen(false); // Close the modal after successful booking
+            onRequestClose();
         } catch (error) {
             console.error(error);
         }
     };
 
-    const closeModal = () => {
-        setIsOpen(false);
-    };
-
     return (
         <Modal
             isOpen={isOpen}
-            onRequestClose={closeModal}
-            className="modal-content bg-gray-900 text-white rounded-lg p-6"
-            overlayClassName="modal-overlay"
+            onRequestClose={onRequestClose}
+            style={customStyles}
+            contentLabel="Booking Modal"
         >
-            <button onClick={closeModal} className="absolute top-2 right-2 text-gray-300 hover:text-white">
+            <button onClick={onRequestClose} className="absolute top-2 right-2 text-gray-300 hover:text-white">
                 &times;
             </button>
-            <div className="text-center">
-                <h1 className="text-2xl mb-2">Hi, I am Gabbug!</h1>
-                <p className="mb-4">Ready for a Quality Software? Let's Dig Deep Into Your Thought!</p>
-            </div>
+            <h2 className="text-center text-xl mb-4">Hi, I am Gabbug!</h2>
+            <p className="text-center mb-4">Ready for a Quality Software? Let's Dig Deep Into Your Thought!</p>
             <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                     <label htmlFor="date" className="block mb-2">Select a Day</label>
@@ -73,4 +79,4 @@ const Booking = () => {
     );
 };
 
-export default Booking;
+export default BookingModal;
