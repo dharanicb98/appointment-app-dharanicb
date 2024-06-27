@@ -2,8 +2,14 @@ import React from 'react';
 
 const NotFound = () => {
     return (
-        <div>
-            <h2>Page Not Found</h2>
+        <div className="bg-transparent py-16 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto">
+                <div className="text-center">
+                    <h2 className="text-2xl font-bold text-gray-800">
+                        Page Not Found
+                    </h2>
+                </div>
+            </div>
         </div>
     );
 };
